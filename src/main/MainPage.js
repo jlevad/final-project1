@@ -1,27 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 // import { makeStyles } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import PropTypes from "prop-types";
-import {
-  AppBar,
-  Typography
-} from "@mui/material";
+import { makeStyles } from '@mui/styles';
+import PropTypes from 'prop-types';
+import { AppBar, Typography } from '@mui/material';
 import {
   Route,
   Switch,
   BrowserRouter as Router,
   NavLink,
-} from "react-router-dom";
+} from 'react-router-dom';
 
-import Covid19Page from "./covid19-page/Covid19Page";
-import SavedPage from "./saved-page/SavedPage";
-import ProgrammingPage from "./programming-page/ProgrammingPage";
-import NewsPage from "./news-page/NewsPage";
+import Covid19Page from './covid19-page/Covid19Page';
+import SavedPage from './saved-page/SavedPage';
+import ProgrammingPage from './programming-page/ProgrammingPage';
+import NewsPage from './news-page/NewsPage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    width: "100%",
+    width: '100%',
   },
 }));
 
@@ -44,6 +42,28 @@ LinkTabs.propTypes = {
 
 const MainPage = () => {
   const classes = useStyles();
+
+  const [allData, setAllData] = useState();
+
+  const getData = async () => {
+    const getNewsAPI = await axios.get(process.env.REACT_APP_NEWS_API);
+    const getProgrammingAPI = await axios.get(
+      process.env.REACT_APP_PROGRAMMING_API
+    );
+    const getCovidAPI = await axios.get(process.env.REACT_APP_COVID_API);
+
+    await axios.all([getNewsAPI, getProgrammingAPI, getCovidAPI]).then(
+      axios.spread((...allData) => {
+        setAllData(allData);
+      })
+    );
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // console.log(allData);
 
   return (
     <div className={classes.root}>
@@ -70,9 +90,15 @@ const MainPage = () => {
         </AppBar>
         <Switch>
           <div className="mt-28 mx-6">
-            <Route exact path="/" component={NewsPage} />
-            <Route path="/programming-page" component={ProgrammingPage} />
-            <Route path="/covid19-page" component={Covid19Page} />
+            <Route exact path="/" render={() => <NewsPage data={allData} />} />
+            <Route
+              path="/programming-page"
+              render={() => <ProgrammingPage data={allData} />}
+            />
+            <Route
+              path="/covid19-page"
+              render={() => <Covid19Page data={allData} />}
+            />
             <Route path="/saved-page" component={SavedPage} />
           </div>
         </Switch>
