@@ -3,7 +3,18 @@ const NewsPage = (props) => {
   if (props.data !== undefined) {
     dataNews = props.data[0].data.articles;
   }
-  // console.log(dataNews);
+
+  const saveItem = (e) => {
+    props.setSaved([...props.saved, e]);
+    props.setIsSaved({ ...props.isSaved, [e.url]: true });
+  };
+  const unsaveItem = (e) => {
+    props.setSaved(props.saved.filter((item) => item.url !== e.url));
+    props.setIsSaved({ ...props.isSaved, [e.url]: false });
+  };
+
+  // console.log(props.saved);
+
   return (
     <section id="news_page">
       <div className="grid grid-cols-auto-fit gap-x-4 gap-y-6 place-content-center">
@@ -24,9 +35,21 @@ const NewsPage = (props) => {
                 >
                   Detail Page
                 </a>
-                <button className="py-2 px-3 bg-green-600 ml-2 text-white">
-                  Save
-                </button>
+                {props.isSaved[item.url] ? (
+                  <button
+                    className="py-2 px-3 bg-red-600 ml-2 text-white"
+                    onClick={() => unsaveItem(item)}
+                  >
+                    Unsave
+                  </button>
+                ) : (
+                  <button
+                    className="py-2 px-3 bg-green-600 ml-2 text-white"
+                    onClick={() => saveItem(item)}
+                  >
+                    Save
+                  </button>
+                )}
               </div>
             </div>
           ))

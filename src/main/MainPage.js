@@ -7,14 +7,16 @@ import { AppBar, Typography } from '@mui/material';
 import {
   Route,
   Switch,
-  BrowserRouter as Router,
+  // BrowserRouter as Router,
   NavLink,
+  useHistory,
 } from 'react-router-dom';
 
 import Covid19Page from './covid19-page/Covid19Page';
 import SavedPage from './saved-page/SavedPage';
 import ProgrammingPage from './programming-page/ProgrammingPage';
 import NewsPage from './news-page/NewsPage';
+import SearchPage from './search-page/SearchPage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,15 +44,24 @@ LinkTabs.propTypes = {
 
 const MainPage = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   const [allData, setAllData] = useState();
+  const [saved, setSaved] = useState([]);
+  const [isSaved, setIsSaved] = useState({});
+  const [query, setQuery] = useState();
+  const [results, setResults] = useState();
 
   const getData = async () => {
-    const getNewsAPI = await axios.get(process.env.REACT_APP_NEWS_API);
-    const getProgrammingAPI = await axios.get(
-      process.env.REACT_APP_PROGRAMMING_API
+    const getNewsAPI = await axios.get(
+      `${process.env.REACT_APP_BASE_API}/top-headlines?country=id&apiKey=${process.env.REACT_APP_API_KEY}`
     );
-    const getCovidAPI = await axios.get(process.env.REACT_APP_COVID_API);
+    const getProgrammingAPI = await axios.get(
+      `${process.env.REACT_APP_BASE_API}/everything?q=covid-19&apiKey=${process.env.REACT_APP_API_KEY}`
+    );
+    const getCovidAPI = await axios.get(
+      `${process.env.REACT_APP_BASE_API}/everything?q=programming&apiKey=${process.env.REACT_APP_API_KEY}`
+    );
 
     await axios.all([getNewsAPI, getProgrammingAPI, getCovidAPI]).then(
       axios.spread((...allData) => {
@@ -59,16 +70,24 @@ const MainPage = () => {
     );
   };
 
+  const searchNews = async (e) => {
+    e.preventDefault();
+    history.push('/search');
+    await axios
+      .get(
+        `${process.env.REACT_APP_BASE_API}/everything?q=${query}&apiKey=${process.env.REACT_APP_API_KEY}`
+      )
+      .then((res) => setResults(res.data.articles));
+  };
+
   useEffect(() => {
     getData();
   }, []);
 
-  // console.log(allData);
-
   return (
     <div className={classes.root}>
-      <Router>
-        <AppBar position="fixed" color="default">
+      <AppBar position="fixed" color="default">
+        <div className="container-navbar flex justify-between items-center">
           <div className="flex flex-row">
             <LinkTabs link="/" label="News Page" activeLink="text-blue-500" />
             <LinkTabs
@@ -87,22 +106,71 @@ const MainPage = () => {
               activeLink="text-blue-500"
             />
           </div>
-        </AppBar>
-        <Switch>
-          <div className="mt-28 mx-6">
-            <Route exact path="/" render={() => <NewsPage data={allData} />} />
-            <Route
-              path="/programming-page"
-              render={() => <ProgrammingPage data={allData} />}
-            />
-            <Route
-              path="/covid19-page"
-              render={() => <Covid19Page data={allData} />}
-            />
-            <Route path="/saved-page" component={SavedPage} />
+          <div className="input_search mr-6">
+            <form action="search-query" onSubmit={searchNews}>
+              <input
+                required
+                type="text"
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                }}
+                className="border-2 border-black rounded-md p-1 text-sm"
+              />
+              <input
+                type="submit"
+                value="Search"
+                className="bg-yellow-500 py-1 px-2 ml-2 rounded-md cursor-pointer"
+              />
+            </form>
           </div>
-        </Switch>
-      </Router>
+        </div>
+      </AppBar>
+      <Switch>
+        <div className="mt-28 mx-6">
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <NewsPage
+                data={allData}
+                setSaved={setSaved}
+                saved={saved}
+                isSaved={isSaved}
+                setIsSaved={setIsSaved}
+              />
+            )}
+          />
+          <Route
+            path="/programming-page"
+            render={() => (
+              <ProgrammingPage
+                data={allData}
+                setSaved={setSaved}
+                saved={saved}
+                isSaved={isSaved}
+                setIsSaved={setIsSaved}
+              />
+            )}
+          />
+          <Route
+            path="/covid19-page"
+            render={() => (
+              <Covid19Page
+                data={allData}
+                setSaved={setSaved}
+                saved={saved}
+                isSaved={isSaved}
+                setIsSaved={setIsSaved}
+              />
+            )}
+          />
+          <Route
+            path="/saved-page"
+            render={() => <SavedPage saved={saved} />}
+          />
+          <Route path="/search" render={() => <SearchPage data={results} />} />
+        </div>
+      </Switch>
     </div>
   );
 };
