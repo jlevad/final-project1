@@ -1,38 +1,40 @@
+import { useEffect, useState } from "react";
+import axios from 'axios';
+import NewsCard from "../component/NewsCard";
+import LinearProgress from '@mui/material/LinearProgress';
+
+
 const Covid19Page = (props) => {
-  let dataCovid;
-  if (props.data !== undefined) {
-    dataCovid = props.data[2].data.articles;
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(true);
+
+  const getData = () => {
+    setLoading(true);
+    axios.get(`${process.env.REACT_APP_BASE_API}everything?q=covid-19&apiKey=${process.env.REACT_APP_API_KEY}`)
+      .then((response) => {
+        setData(response.data.articles);
+        setLoading(false);
+      }).catch((error) => {
+        setData([]);
+        setLoading(false);
+      })
   }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <section id="Covid_page">
-      <div className="grid grid-cols-auto-fit gap-x-4 gap-y-6 place-content-center">
-        {dataCovid !== undefined ? (
-          dataCovid.map((item, i) => (
-            <div className="item_wrap" key={i}>
-              <h2 className="text-sm font-normal">{item.source.name}</h2>
-              <h1 className="font-bold text-lg">{item.title}</h1>
-              <img src={item.urlToImage} alt="" />
-              <span className="text-sm">{item.author}</span>
-              <p>{item.description}</p>
-              <div className="btn_action mt-3">
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-2 px-3 bg-blue-600 text-white"
-                >
-                  Detail Page
-                </a>
-                <button className="py-2 px-3 bg-green-600 ml-2 text-white">
-                  Save
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>Loading...</p>
-        )}
-      </div>
+      {loading ?
+        <div className="mt-8 md:mt-40 md: mx-20">
+          <LinearProgress />
+        </div>
+        : data.length !== 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {data.map((item, i) => <NewsCard item={item} />)}
+          </div>
+        ) : 'data tidak ditemukan'}
     </section>
   );
 };

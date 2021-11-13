@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 // import { makeStyles } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
@@ -43,34 +41,12 @@ LinkTabs.propTypes = {
 const MainPage = () => {
   const classes = useStyles();
 
-  const [allData, setAllData] = useState();
-
-  const getData = async () => {
-    const getNewsAPI = await axios.get(process.env.REACT_APP_NEWS_API);
-    const getProgrammingAPI = await axios.get(
-      process.env.REACT_APP_PROGRAMMING_API
-    );
-    const getCovidAPI = await axios.get(process.env.REACT_APP_COVID_API);
-
-    await axios.all([getNewsAPI, getProgrammingAPI, getCovidAPI]).then(
-      axios.spread((...allData) => {
-        setAllData(allData);
-      })
-    );
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  // console.log(allData);
-
   return (
     <div className={classes.root}>
       <Router>
         <AppBar position="fixed" color="default">
           <div className="flex flex-row">
-            <LinkTabs link="/" label="News Page" activeLink="text-blue-500" />
+            <LinkTabs link="/" label="Indonesia" activeLink="text-blue-500" />
             <LinkTabs
               link="/programming-page"
               label="Programming"
@@ -90,14 +66,14 @@ const MainPage = () => {
         </AppBar>
         <Switch>
           <div className="mt-28 mx-6">
-            <Route exact path="/" render={() => <NewsPage data={allData} />} />
+            <Route exact path="/" render={() => <NewsPage />} />
             <Route
               path="/programming-page"
-              render={() => <ProgrammingPage data={allData} />}
+              render={() => <ProgrammingPage />}
             />
             <Route
               path="/covid19-page"
-              render={() => <Covid19Page data={allData} />}
+              render={() => <Covid19Page />}
             />
             <Route path="/saved-page" component={SavedPage} />
           </div>
