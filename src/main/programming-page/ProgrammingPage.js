@@ -2,6 +2,7 @@ import NewsCard from "../component/NewsCard";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import LinearProgress from '@mui/material/LinearProgress';
+import { Typography } from "@mui/material";
 
 const ProgrammingPage = (props) => {
   const [loading, setLoading] = useState(true);
@@ -25,6 +26,11 @@ const ProgrammingPage = (props) => {
 
   return (
     <section id="programming_page">
+      <div className="text-center">
+        <Typography variant="h4">
+          {props.title} News
+        </Typography>
+      </div>
       {loading ?
         <div className="mt-8 md:mt-40 md: mx-20">
           <LinearProgress />

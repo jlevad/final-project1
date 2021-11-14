@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import NewsCard from "../component/NewsCard";
 import LinearProgress from '@mui/material/LinearProgress';
+import { useHistory } from "react-router-dom";
+import { Typography } from "@mui/material";
 
 const NewsPage = (props) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(true);
+  const _history = useHistory();
+  props.setHistory(_history);
 
   const getData = () => {
     setLoading(true);
@@ -26,13 +30,18 @@ const NewsPage = (props) => {
   // console.log(data);
   return (
     <section id="news_page">
+      <div className="text-center">
+        <Typography variant="h4">
+          {props.title} News
+        </Typography>
+      </div>
       {loading ?
         <div className="mt-8 md:mt-40 md: mx-20">
           <LinearProgress />
         </div>
         : data.length !== 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {data.map((item, i) => <NewsCard item={item} /> )}
+            {data.map((item, i) => <NewsCard item={item} />)}
           </div>
         ) : 'data tidak ditemukan'}
     </section>

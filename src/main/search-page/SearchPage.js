@@ -1,37 +1,23 @@
-import { useEffect, useState } from "react";
-import axios from 'axios';
 import NewsCard from "../component/NewsCard";
+import { useEffect, useState } from "react";
 import LinearProgress from '@mui/material/LinearProgress';
 import { Typography } from "@mui/material";
 
-const Covid19Page = (props) => {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(true);
-
-  const getData = () => {
-    setLoading(true);
-    axios.get(`${process.env.REACT_APP_BASE_API}everything?q=covid-19&apiKey=${process.env.REACT_APP_API_KEY}`)
-      .then((response) => {
-        setData(response.data.articles);
-        setLoading(false);
-      }).catch((error) => {
-        setData([]);
-        setLoading(false);
-      })
-  }
+const SearchPage = (props) => {
+  const [data, setData] = useState(props.data);
 
   useEffect(() => {
-    getData();
-  }, []);
+    setData(props.data);
+  }, [props.data]);
 
   return (
-    <section id="Covid_page">
+    <section id="search-page">
       <div className="text-center">
         <Typography variant="h4">
           {props.title} News
         </Typography>
       </div>
-      {loading ?
+      {props.loading ?
         <div className="mt-8 md:mt-40 md: mx-20">
           <LinearProgress />
         </div>
@@ -44,4 +30,4 @@ const Covid19Page = (props) => {
   );
 };
 
-export default Covid19Page;
+export default SearchPage;
