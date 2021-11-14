@@ -37,7 +37,15 @@ const ProgrammingPage = (props) => {
         </div>
         : data.length !== 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {data.map((item, i) => <NewsCard item={item} />)}
+            {data.map((item, i) => (
+              <NewsCard
+                item={item}
+                setSaved={props.setSaved}
+                saved={props.saved}
+                isSaved={props.isSaved}
+                setIsSaved={props.setIsSaved}
+              />
+            ))}
           </div>
         ) : 'data tidak ditemukan'}
     </section>

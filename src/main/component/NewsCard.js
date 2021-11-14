@@ -8,6 +8,15 @@ import { Stack } from '@mui/material';
 
 const NewsCard = (props) => {
 
+  const saveItem = (e) => {
+    props.setSaved([...props.saved, e]);
+    props.setIsSaved({ ...props.isSaved, [e.url]: true });
+  };
+  const unsaveItem = (e) => {
+    props.setSaved(props.saved.filter((item) => item.url !== e.url));
+    props.setIsSaved({ ...props.isSaved, [e.url]: false });
+  };
+
   return (
     <Card className="m-2 md:m-4 flex flex-col justify-between">
       <div className="max-h-96">
@@ -31,13 +40,6 @@ const NewsCard = (props) => {
       <CardActions>
         <Stack direction="row" spacing={2} >
           <Button
-            variant="contained"
-            size="small"
-            color="success"
-          >
-            Save
-          </Button>
-          <Button
             color="warning"
             variant="contained"
             size="small"
@@ -47,6 +49,25 @@ const NewsCard = (props) => {
           >
             News Page
           </Button>
+          {props.isSaved[props.item.url] ? (
+            <Button
+              variant="contained"
+              size="small"
+              color="success"
+              onClick={() => unsaveItem(props.item)}
+            >
+              Unsave
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              size="small"
+              color="success"
+              onClick={() => saveItem(props.item)}
+            >
+              Save
+            </Button>
+          )}
         </Stack>
       </CardActions>
     </Card>

@@ -51,6 +51,9 @@ const MainPage = () => {
   const [history, setHistory] = useState();
   const [loading, setLoading] = useState(true);
 
+  const [saved, setSaved] = useState([]);
+  const [isSaved, setIsSaved] = useState({});
+
   const searchNews = async () => {
     setLoading(true);
     history.push('/search-page');
@@ -115,6 +118,10 @@ const MainPage = () => {
                   valueSearch={valueSearch}
                   setHistory={setHistory}
                   title="Indonesia"
+                  setSaved={setSaved}
+                  saved={saved}
+                  isSaved={isSaved}
+                  setIsSaved={setIsSaved}
                 />
               )}
             />
@@ -124,6 +131,10 @@ const MainPage = () => {
                 <ProgrammingPage
                   valueSearch={valueSearch}
                   title="Programming"
+                  setSaved={setSaved}
+                  saved={saved}
+                  isSaved={isSaved}
+                  setIsSaved={setIsSaved}
                 />
               )}
             />
@@ -133,6 +144,10 @@ const MainPage = () => {
                 <Covid19Page
                   valueSearch={valueSearch}
                   title="COVID19"
+                  setSaved={setSaved}
+                  saved={saved}
+                  isSaved={isSaved}
+                  setIsSaved={setIsSaved}
                 />
               )}
             />
@@ -140,6 +155,7 @@ const MainPage = () => {
               <SavedPage
                 valueSearch={valueSearch}
                 title="Saved"
+                saved={saved}
               />
             )} />
             <Route
@@ -149,6 +165,10 @@ const MainPage = () => {
                   data={data}
                   loading={loading}
                   title={valueSearch}
+                  setSaved={setSaved}
+                  saved={saved}
+                  isSaved={isSaved}
+                  setIsSaved={setIsSaved}
                 />
               )}
             />
