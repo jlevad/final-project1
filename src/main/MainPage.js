@@ -1,9 +1,9 @@
 // import { makeStyles } from "@mui/material";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
-import { AppBar, Button, TextField, Typography } from '@mui/material';
+import { AppBar, TextField, Typography } from '@mui/material';
 import {
   Route,
   Switch,
@@ -100,7 +100,7 @@ const MainPage = () => {
                 onChange={(e) => setValueSearch(e.target.value)}
               />
               <IconButton aria-label="search" onClick={() => searchNews()} size="large">
-                <SearchIcon />
+                <SearchIcon color="warning" />
               </IconButton>
             </div>
           </div>

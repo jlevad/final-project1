@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent';
 // import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { Stack } from '@mui/material';
 
 const NewsCard = (props) => {
 
@@ -20,7 +21,7 @@ const NewsCard = (props) => {
         <Typography variant="subtitle2" component="div">
           {props.item.source.name}
         </Typography>
-        <Typography variant="h6" component="div">
+        <Typography variant="h6" component="div" color="primary">
           {props.item.title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -28,13 +29,25 @@ const NewsCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Save</Button>
-        <Button size="small" href={props.item.url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn More
-        </Button>
+        <Stack direction="row" spacing={2} >
+          <Button
+            variant="contained"
+            size="small"
+            color="success"
+          >
+            Save
+          </Button>
+          <Button
+            color="warning"
+            variant="contained"
+            size="small"
+            href={props.item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            News Page
+          </Button>
+        </Stack>
       </CardActions>
     </Card>
   )
